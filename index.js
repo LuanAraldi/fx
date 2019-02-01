@@ -3,6 +3,7 @@
 const os = require('os')
 const fs = require('fs')
 const path = require('path')
+const parseString = require('xml2js').parseString;
 const {stdin, stdout, stderr} = process
 try {
   require(path.join(os.homedir(), '.fxrc'))
@@ -54,7 +55,10 @@ function main(input) {
     args = args.slice(1)
   }
 
-  const json = JSON.parse(input)
+  let json = '';
+  parseString(input.toString('utf-8'), function (err, result) {
+    json = result;
+  });
 
   if (args.length === 0 && stdout.isTTY) {
     require('./fx')(filename, json)
